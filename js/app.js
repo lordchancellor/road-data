@@ -23,11 +23,14 @@ const roadDataAPI = {
 		return individualRoadData;
 	}
 }
+
 d3.csv('../data/devon.csv', (data) => {
-	for (var i = 0; i < data.length; i++) {
-		roadDataAPI.readRoadData(data[i]);
+	for (let item of data) {
+		roadDataAPI.readRoadData(item);
 	}
 
 	console.log('Finished reading data');
 });
 
+let testData = roadDataAPI.getRoadData(89374);
+console.log(testData);
