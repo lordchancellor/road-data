@@ -35,16 +35,45 @@ d3.csv('../data/devon.csv', (data) => {
 	console.log(roadDataAPI.testData);
 });
 
+// Google Map
+function initMap() {
+	const center = {
+		lat: 50.6943231532,
+		lng: -3.50213953897
+	};
+	
+	const map = new google.maps.Map(document.getElementById('map'), {
+		center: center,
+		zoom: 14,
+		zoomControl: true,
+		mapTypeControl: false,
+		scaleControl: false,
+		streetViewControl: false,
+		rotateControl: false,
+		fullscreenControl: false
+	});
+
+	const marker = new google.maps.Marker({
+		position: center,
+		map: map
+	});
+}
+
 
 // var promise = new Promise((resolve, reject) => {
-// 	d3.csv('../data/devon.csv', (data) => {
-// 		for (let item of data) {
-// 			roadDataAPI.readRoadData(item);
-// 		}
-// 	});
+// 	d3.csv('../data/devon.csv',
+// 		(data) => {
+// 			for (let item of data) {
+// 				roadDataAPI.readRoadData(item);
+// 			}
 
-// 	resolve("Finished loading data.");
-// 	reject("Error loading data.");
+// 			resolve("Finished loading data.");
+// 		},
+// 		(err) => {
+// 			reject("Error loading data.");
+// 			// console.err(err);
+// 		}
+// 	);
 // });
 
 // promise.then(

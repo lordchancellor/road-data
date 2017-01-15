@@ -1,20 +1,18 @@
-/***************************************
-** Primary Stylesheet for Sandbox 3.0 **
-***************************************/
-.btn-github {
-  background: #333333;
-  border-color: #111111;
-  color: #ffffff; }
-  .btn-github:hover {
-    background: #222222;
-    color: #ffffff; }
+.flex-container {
+  display: flex;
+  flex-direction: row; }
+  .flex-container div {
+    height: 300px; }
+  .flex-container .data-selection {
+    flex-grow: 1;
+    border: 1px solid blue; }
+  .flex-container #map {
+    flex-grow: 3;
+    border: 1px solid red; }
 
-.btn-twitter {
-  background: #55acee;
-  border-color: #3E7EAE;
-  color: #ffffff; }
-  .btn-twitter:hover {
-    background: #4C9AD4;
-    color: #ffffff; }
+.graph-container {
+  width: 100%;
+  height: 500px;
+  border: 1px solid green; }
 
 /*# sourceMappingURL=style.css.map */
