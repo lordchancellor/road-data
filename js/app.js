@@ -57,7 +57,7 @@ const graphingAPI = {
 				datasets: [{
 					label: dataObj.column,
 					data: dataObj.columnData,
-					backgroundColor: [],
+					backgroundColor: 'steelblue',
 					borderColor: [],
 					borderWidth: 1
 				}]
@@ -66,17 +66,32 @@ const graphingAPI = {
 	}
 }
 
-d3.csv('../data/devon.csv', (err, data) => {
-	for (let item of data) {
-		roadDataAPI.readRoadData(item);
-	}
+var promise = new Promise((resolve, reject) => {
+	d3.csv('../data/devon.csv', (err, data) => {
+		if (err) {
+			reject('Error loading data.');
+			console.err(err);
+		}
 
-	console.log('Finished loading data');
-	roadDataAPI.testData = roadDataAPI.getRoadData(89374);
-	console.log(roadDataAPI.testData);
+		for (let item of data) {
+			roadDataAPI.readRoadData(item);
+		}
 
-	graphingAPI.barchart(roadDataAPI.getIndividualData("Motorcycles"));
+		resolve('Finished loading data');
+	});
 });
+
+promise.then(
+	(result) => {
+		console.log(result);
+
+		roadDataAPI.testData = roadDataAPI.getRoadData(89374);
+		console.log(roadDataAPI.testData);
+
+		graphingAPI.barchart(roadDataAPI.getIndividualData("Motorcycles"));
+	},
+	(err) => console.log(err)
+);
 
 
 // Google Map
@@ -104,28 +119,22 @@ function initMap() {
 }
 
 
-// var promise = new Promise((resolve, reject) => {
-// 	d3.csv('../data/devon.csv',
-// 		(data) => {
-// 			for (let item of data) {
-// 				roadDataAPI.readRoadData(item);
-// 			}
 
-// 			resolve("Finished loading data.");
-// 		},
-// 		(err) => {
-// 			reject("Error loading data.");
-// 			// console.err(err);
-// 		}
-// 	);
+// d3.csv('../data/devon.csv', (err, data) => {
+// 	if (err) {
+// 		console.err('There was an error');
+// 	}
+// 	else {
+// 		console.log('Data loaded ok!');
+// 	}
+// 	for (let item of data) {
+// 		roadDataAPI.readRoadData(item);
+// 	}
+
+// 	console.log('Finished loading data');
+// 	roadDataAPI.testData = roadDataAPI.getRoadData(89374);
+// 	console.log(roadDataAPI.testData);
+
+// 	graphingAPI.barchart(roadDataAPI.getIndividualData("Motorcycles"));
 // });
 
-// promise.then(
-// 	(result) => {
-// 		console.log(result);
-
-// 		roadDataAPI.testData = roadDataAPI.getRoadData(89374);
-// 		console.log(roadDataAPI.testData);
-// 	},
-// 	(err) => console.log(err)
-// );
