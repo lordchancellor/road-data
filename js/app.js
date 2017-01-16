@@ -59,7 +59,7 @@ const graphingAPI = {
 				datasets: [{
 					label: dataObj.column,
 					data: dataObj.columnData,
-					backgroundColor: 'steelblue',
+					backgroundColor: '#E53935',
 					borderColor: [],
 					borderWidth: 1
 				}]
@@ -130,11 +130,16 @@ promise.then(
 
 // Google Map
 function initMap() {
+	// const center = {
+	// 	lat: 50.6943231532,
+	// 	lng: -3.50213953897
+	// };
+
 	const center = {
-		lat: 50.6943231532,
-		lng: -3.50213953897
+		lat: 50.69376666612421,
+		lng: -3.500945871444607
 	};
-	
+
 	const map = new google.maps.Map(document.getElementById('map'), {
 		center: center,
 		zoom: 15,
