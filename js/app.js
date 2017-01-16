@@ -75,7 +75,9 @@ const graphingAPI = {
 	},
 
 	groupedBar: function groupedBar(group) {
-		// console.log(group);
+		const colors = ['#E53935', '#5E35B1', '#1E88E5', '#00897B', '#43A047', '#FFB300'];
+		let i = 0;
+
 		let dataObj = {
 			labels: group[0].years,
 			datasets: []
@@ -85,10 +87,12 @@ const graphingAPI = {
 			dataObj.datasets = [...dataObj.datasets, {
 				label: item.column,
 				data: item.columnData,
-				backgroundColor: 'steelblue',
+				backgroundColor: colors[i],
 				borderColor: [],
 				borderWidth: 1
 			}];
+
+			i++;
 		}
 
 		return dataObj;
@@ -117,7 +121,7 @@ promise.then(
 		roadDataAPI.testData = roadDataAPI.getRoadData(89374);
 		console.log(roadDataAPI.testData);
 
-		graphingAPI.barchart(roadDataAPI.getIndividualData("Motorcycles"), roadDataAPI.getIndividualData("PedalCycles"));
+		graphingAPI.barchart(roadDataAPI.getIndividualData("Motorcycles"), roadDataAPI.getIndividualData("PedalCycles"), roadDataAPI.getIndividualData("BusCoaches"));
 		// graphingAPI.barchart(roadDataAPI.getIndividualData("Motorcycles"));
 	},
 	(err) => console.log(err)
