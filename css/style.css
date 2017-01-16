@@ -4,7 +4,7 @@
   .flex-container div {
     height: 300px; }
   .flex-container .data-selection {
-    flex-grow: 1;
+    flex-grow: 2;
     border: 1px solid blue; }
   .flex-container #map {
     flex-grow: 3;

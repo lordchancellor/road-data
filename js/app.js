@@ -14,24 +14,55 @@ const roadDataAPI = {
 		this.roadData.push(obj);
 	},
 
-	getRoadData: function getRoadData(road) {
+	getRoadData: function getRoadData(northing) {
 		let individualRoadData = [];
 
 		for (let item of this.roadData) {
-			if (item["Northing"] === road) {
+			if (item["Northing"] === northing) {
 				individualRoadData.push(item);
 			}
 		}
 
 		return individualRoadData;
+	},
+
+	getIndividualData: function getIndividualData(column) {
+		const data = this.getRoadData(89374);
+		let dataObj = {
+			column,
+			road: data[0]["Road"],
+			startJunct: data[0]["StartJunction"],
+			endJunct: data[0]["EndJunction"],
+			columnData: [],
+			years: []
+		}
+
+		for (let item of data) {
+			dataObj.columnData = [...dataObj.columnData, item[column]];
+			dataObj.years = [...dataObj.years, item["AADFYear"]];
+		}
+
+		return dataObj;
 	}
 }
 
 const graphingAPI = {
-	barchart: function barchart(svg, x, y) {
-		const data = roadDataAPI.testData;
+	barchart: function barchart(dataObj) {
+		const ctx = document.getElementById('graph-container');
 
-		// x.domain(data.map((d) => d.))
+		const myChart = new Chart(ctx, {
+			type: 'bar',
+			data: {
+				labels: dataObj.years,
+				datasets: [{
+					label: dataObj.column,
+					data: dataObj.columnData,
+					backgroundColor: [],
+					borderColor: [],
+					borderWidth: 1
+				}]
+			}
+		});	
 	}
 }
 
@@ -43,32 +74,9 @@ d3.csv('../data/devon.csv', (err, data) => {
 	console.log('Finished loading data');
 	roadDataAPI.testData = roadDataAPI.getRoadData(89374);
 	console.log(roadDataAPI.testData);
+
+	graphingAPI.barchart(roadDataAPI.getIndividualData("Motorcycles"));
 });
-
-
-// Graphs
-const margin = {
-	top: 20,
-	right: 20,
-	bottom: 30,
-	left: 40
-};
-const width = 960 - margin.left - margin.right;
-const height = 500 - margin.top - margin.bottom;
-
-const x = d3.scaleBand()
-	.range([0, width])
-	.padding(0.1);
-const y = d3.scaleLinear()
-	.range([height, 0]);
-
-const svg = d3.select("#graph-container").append("svg")
-	.attr("width", width + margin.left + margin.right)
-	.attr("height", height + margin.top + margin.bottom)
-	.append("g")
-	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-
 
 
 // Google Map
