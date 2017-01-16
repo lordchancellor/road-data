@@ -48,11 +48,13 @@ const roadDataAPI = {
 
 const graphingAPI = {
 	barchart: function barchart(dataObj) {
-		const ctx = document.getElementById('graph-container');
-
-		const myChart = new Chart(ctx, {
-			type: 'bar',
-			data: {
+		let data = {};
+		
+		if (arguments.length > 1) {
+			data = this.groupedBar(arguments);
+		}
+		else {
+			data = {
 				labels: dataObj.years,
 				datasets: [{
 					label: dataObj.column,
@@ -61,8 +63,35 @@ const graphingAPI = {
 					borderColor: [],
 					borderWidth: 1
 				}]
-			}
+			};
+		}
+
+		const ctx = document.getElementById('graph-container');
+
+		const myChart = new Chart(ctx, {
+			type: 'bar',
+			data: data
 		});	
+	},
+
+	groupedBar: function groupedBar(group) {
+		// console.log(group);
+		let dataObj = {
+			labels: group[0].years,
+			datasets: []
+		}
+
+		for (let item of group) {
+			dataObj.datasets = [...dataObj.datasets, {
+				label: item.column,
+				data: item.columnData,
+				backgroundColor: 'steelblue',
+				borderColor: [],
+				borderWidth: 1
+			}];
+		}
+
+		return dataObj;
 	}
 }
 
@@ -88,7 +117,8 @@ promise.then(
 		roadDataAPI.testData = roadDataAPI.getRoadData(89374);
 		console.log(roadDataAPI.testData);
 
-		graphingAPI.barchart(roadDataAPI.getIndividualData("Motorcycles"));
+		graphingAPI.barchart(roadDataAPI.getIndividualData("Motorcycles"), roadDataAPI.getIndividualData("PedalCycles"));
+		// graphingAPI.barchart(roadDataAPI.getIndividualData("Motorcycles"));
 	},
 	(err) => console.log(err)
 );
