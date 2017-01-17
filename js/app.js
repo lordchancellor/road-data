@@ -3,6 +3,7 @@
 const roadDataAPI = {
 	roadData: [],
 	testData: [],
+	individualRoads: [],
 
 	readRoadData: function readRoadData(obj) {
 		for (let item in obj) {
@@ -10,6 +11,8 @@ const roadDataAPI = {
 				obj[item] = +obj[item];
 			} 
 		}
+
+		pageSetupAPI.setUniqueRoads(obj["Road"]);
 
 		this.roadData.push(obj);
 	},
@@ -44,6 +47,7 @@ const roadDataAPI = {
 
 		return dataObj;
 	}
+
 }
 
 const graphingAPI = {
@@ -99,6 +103,21 @@ const graphingAPI = {
 	}
 }
 
+const pageSetupAPI = {
+	uniqueRoads: [],
+	allRoads: [],
+
+	setUniqueRoads: function setUniqueRoads(road) {
+		if (this.uniqueRoads.indexOf(road) === -1) {
+			this.uniqueRoads = [...this.uniqueRoads, road];
+		}
+	},
+
+	setAllRoads: function setAllRoads(roadsArray) {
+		this.allRoads = roadsArray;
+	}
+}
+
 var promise = new Promise((resolve, reject) => {
 	d3.csv('../data/devon.csv', (err, data) => {
 		if (err) {
@@ -118,10 +137,13 @@ promise.then(
 	(result) => {
 		console.log(result);
 
+		console.log('Unique Roads');
+		console.log(pageSetupAPI.uniqueRoads);
+
 		roadDataAPI.testData = roadDataAPI.getRoadData(89374);
 		console.log(roadDataAPI.testData);
 
-		graphingAPI.barchart(roadDataAPI.getIndividualData("Motorcycles"), roadDataAPI.getIndividualData("PedalCycles"), roadDataAPI.getIndividualData("BusCoaches"));
+		graphingAPI.barchart(roadDataAPI.getIndividualData("Motorcycles"), roadDataAPI.getIndividualData("PedalCycles"));
 		// graphingAPI.barchart(roadDataAPI.getIndividualData("Motorcycles"));
 	},
 	(err) => console.log(err)
@@ -130,15 +152,15 @@ promise.then(
 
 // Google Map
 function initMap() {
-	// const center = {
-	// 	lat: 50.6943231532,
-	// 	lng: -3.50213953897
-	// };
-
 	const center = {
-		lat: 50.69376666612421,
-		lng: -3.500945871444607
+		lat: 50.6943231532,
+		lng: -3.50213953897
 	};
+
+	// const center = {
+	// 	lat: 50.69376666612421,
+	// 	lng: -3.500945871444607
+	// };
 
 	const map = new google.maps.Map(document.getElementById('map'), {
 		center: center,
