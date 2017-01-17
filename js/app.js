@@ -3,7 +3,6 @@
 const roadDataAPI = {
 	roadData: [],
 	testData: [],
-	individualRoads: [],
 
 	readRoadData: function readRoadData(obj) {
 		for (let item in obj) {
@@ -30,8 +29,8 @@ const roadDataAPI = {
 		return individualRoadData;
 	},
 
-	getIndividualData: function getIndividualData(column) {
-		const data = this.getRoadData(89374);
+	getIndividualData: function getIndividualData(column, northing) {
+		const data = this.getRoadData(northing);
 		let dataObj = {
 			column,
 			road: data[0]["Road"],
@@ -47,6 +46,19 @@ const roadDataAPI = {
 		}
 
 		return dataObj;
+	},
+
+	getNorthing: function getNorthing(label) {
+		console.log(label);
+		label = label.split(' to ');
+
+		for (let road of pageSetupAPI.allRoads) {
+			if (road["StartJunction"] === label[0] && road["EndJunction"] === label[1]) {
+				return road["Northing"];
+			}
+		}
+
+		console.log('Could not find Northing');
 	}
 
 }
@@ -143,12 +155,23 @@ const pageSetupAPI = {
 
 		this.clearOptions(roadSectionSelect);
 
+		roadSectionSelect.appendChild(this.setDefaultOption());
+
 		for (let roadSection of this.allRoads) {
 			if (roadSection["Road"] === road) {
 				let label = `${roadSection["StartJunction"]} to ${roadSection["EndJunction"]}`;
 				roadSectionSelect.appendChild(this.createOption(label));
 			}
 		}
+	},
+
+	setDefaultOption: function setDefaultOption() {
+		let defaultOption = document.createElement('option');
+
+		defaultOption.setAttribute('value', 0);
+		defaultOption.textContent = '-- Select a Road Section ---';
+
+		return defaultOption;
 	},
 
 	clearOptions: function clearOptions(select) {
@@ -178,7 +201,12 @@ const pageSetupAPI = {
 		});
 
 		roadSectionSelect.addEventListener('change', function() {
-			
+			if (this.selectedIndex !== 0) {
+				const northing = roadDataAPI.getNorthing(this.value);
+				console.log(northing);
+
+				graphingAPI.barchart(roadDataAPI.getIndividualData("Motorcycles", northing), roadDataAPI.getIndividualData("PedalCycles", northing));
+			}
 		});
 	},
 
@@ -221,7 +249,7 @@ promise.then(
 		roadDataAPI.testData = roadDataAPI.getRoadData(89374);
 		console.log(roadDataAPI.testData);
 
-		graphingAPI.barchart(roadDataAPI.getIndividualData("Motorcycles"), roadDataAPI.getIndividualData("PedalCycles"));
+		// graphingAPI.barchart(roadDataAPI.getIndividualData("Motorcycles"), roadDataAPI.getIndividualData("PedalCycles"));
 		// graphingAPI.barchart(roadDataAPI.getIndividualData("Motorcycles"));
 	},
 	(err) => console.log(err)
