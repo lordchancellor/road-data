@@ -13,6 +13,7 @@ const roadDataAPI = {
 		}
 
 		pageSetupAPI.setUniqueRoads(obj["Road"]);
+		pageSetupAPI.setAllRoads(obj);
 
 		this.roadData.push(obj);
 	},
@@ -113,8 +114,14 @@ const pageSetupAPI = {
 		}
 	},
 
-	setAllRoads: function setAllRoads(roadsArray) {
-		this.allRoads = roadsArray;
+	setAllRoads: function setAllRoads(roadObj) {
+		this.allRoads = [...this.allRoads, {
+			"Road": roadObj["Road"],
+			"StartJunction": roadObj["StartJunction"],
+			"EndJunction": roadObj["EndJunction"],
+			"Easting": roadObj["Easting"],
+			"Northing": roadObj["Northing"]
+		}];
 	}
 }
 
@@ -139,6 +146,10 @@ promise.then(
 
 		console.log('Unique Roads');
 		console.log(pageSetupAPI.uniqueRoads);
+
+		console.log('All Roads');
+		console.log('Length ' + pageSetupAPI.allRoads.length);
+		console.log(pageSetupAPI.allRoads[0]);
 
 		roadDataAPI.testData = roadDataAPI.getRoadData(89374);
 		console.log(roadDataAPI.testData);
