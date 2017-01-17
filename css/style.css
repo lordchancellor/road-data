@@ -1,11 +1,15 @@
 .flex-container {
   display: flex;
   flex-direction: row; }
-  .flex-container div {
+  .flex-container > div {
     height: 300px; }
   .flex-container .data-selection {
-    flex-grow: 2;
-    border: 1px solid blue; }
+    flex-grow: 2; }
+    .flex-container .data-selection form label {
+      display: block; }
+    .flex-container .data-selection form .roadSectionSelect {
+      margin-top: 30px;
+      display: none; }
   .flex-container #map {
     flex-grow: 3; }
 

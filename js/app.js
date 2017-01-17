@@ -112,16 +112,88 @@ const pageSetupAPI = {
 		if (this.uniqueRoads.indexOf(road) === -1) {
 			this.uniqueRoads = [...this.uniqueRoads, road];
 		}
+
+		this.uniqueRoads.sort();
 	},
 
 	setAllRoads: function setAllRoads(roadObj) {
-		this.allRoads = [...this.allRoads, {
-			"Road": roadObj["Road"],
-			"StartJunction": roadObj["StartJunction"],
-			"EndJunction": roadObj["EndJunction"],
-			"Easting": roadObj["Easting"],
-			"Northing": roadObj["Northing"]
-		}];
+		if (roadObj["AADFYear"] === 2000) {
+			this.allRoads = [...this.allRoads, {
+				"Road": roadObj["Road"],
+				"StartJunction": roadObj["StartJunction"],
+				"EndJunction": roadObj["EndJunction"],
+				"Easting": roadObj["Easting"],
+				"Northing": roadObj["Northing"]
+			}];
+		}
+
+		this.allRoads.sort();
+	},
+
+	populateUniqueRoadsSelect: function populateUniqueRoadsSelect() {
+		let uniqueRoadSelect = document.getElementById('uniqueRoads');
+		
+		for (let road of this.uniqueRoads) {
+			uniqueRoadSelect.appendChild(this.createOption(road));
+		}
+	},
+
+	populateRoadSectionSelect: function populateRoadSectionSelect(road) {
+		let roadSectionSelect = document.getElementById('roadSection');
+
+		this.clearOptions(roadSectionSelect);
+
+		for (let roadSection of this.allRoads) {
+			if (roadSection["Road"] === road) {
+				let label = `${roadSection["StartJunction"]} to ${roadSection["EndJunction"]}`;
+				roadSectionSelect.appendChild(this.createOption(label));
+			}
+		}
+	},
+
+	clearOptions: function clearOptions(select) {
+		while (select.hasChildNodes()) {
+			select.removeChild(select.lastChild);
+		}
+	},
+
+	createOption: function createOption(label) {
+		let option = document.createElement('option');
+
+		option.setAttribute('value', label);
+		option.textContent = label;
+
+		return option;
+	},
+
+	setSelectListeners: function setSelectListeners() {
+		const uniqueRoadSelect = document.getElementById('uniqueRoads');
+		const roadSectionSelect = document.getElementById('roadSection');
+		const roadSectionContainer = document.getElementsByClassName('roadSectionSelect')[0];
+
+		uniqueRoadSelect.addEventListener('change', function() {
+			roadSectionContainer.style.display = this.selectedIndex === 0 ? 'none' : 'block';
+			
+			pageSetupAPI.populateRoadSectionSelect(this.value);
+		});
+
+		roadSectionSelect.addEventListener('change', function() {
+			
+		});
+	},
+
+	setupPage: function setupPage() {
+		console.log('Setting select');
+		this.populateUniqueRoadsSelect();
+
+		console.log('Unique Roads');
+		console.log(this.uniqueRoads);
+
+		console.log('All Roads');
+		console.log('Length ' + this.allRoads.length);
+		console.log(this.allRoads[0]);
+
+		this.setSelectListeners();
 	}
 }
 
@@ -144,12 +216,7 @@ promise.then(
 	(result) => {
 		console.log(result);
 
-		console.log('Unique Roads');
-		console.log(pageSetupAPI.uniqueRoads);
-
-		console.log('All Roads');
-		console.log('Length ' + pageSetupAPI.allRoads.length);
-		console.log(pageSetupAPI.allRoads[0]);
+		pageSetupAPI.setupPage();
 
 		roadDataAPI.testData = roadDataAPI.getRoadData(89374);
 		console.log(roadDataAPI.testData);

@@ -29,7 +29,19 @@
 			<h1>Road Data</h1>
 
 			<div class="flex-container">
-				<div class="data-selection"></div>
+				<div class="data-selection">
+					<form action="">
+						<label for="uniqueRoads">Road Selection</label>
+						<select name="uniqueRoads" id="uniqueRoads">
+							<option value="0">-- Select a Road --</option>
+						</select>
+
+						<div class="roadSectionSelect">
+							<label for="roadSection">Road Section</label>
+							<select name="roadSection" id="roadSection"></select>
+						</div>
+					</form>
+				</div>
 				<div id="map"></div>
 			</div>
 
