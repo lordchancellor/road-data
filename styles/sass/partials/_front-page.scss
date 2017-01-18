@@ -35,7 +35,7 @@ header {
 }
 
 .container {
-	.flex-container {
+	&>.flex-container {
 		&> div {
 			height: 300px;
 		}
@@ -52,6 +52,47 @@ header {
 					margin-top: 30px;
 					display: none;
 				}
+			}
+		}
+
+		.data-controls {
+			margin-top: 30px;
+
+			.flex-container {
+				justify-content: flex-start;
+			}
+
+			.left,
+			.right {
+				display: flex;
+				flex-direction: column;
+
+				input[type=checkbox] {
+					position: absolute;
+					top: -9999px;
+					left: -9999px;
+				}
+
+				input[type=checkbox]:checked + label {
+					background-color: #e6e6e6;
+					border-color: #adadad;
+				}
+
+				label {
+					margin-bottom: 10px;
+
+					&:last-of-type {
+						margin-bottom: 0;
+					}
+				}
+			}
+
+			.left {
+				margin-right: 10px;
+			}
+
+			.right {
+
 			}
 		}
 

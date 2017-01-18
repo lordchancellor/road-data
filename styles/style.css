@@ -35,16 +35,41 @@ header {
       header p a:hover, header p a:focus {
         color: #ffffff; }
 
-.container .flex-container > div {
+.container > .flex-container > div {
   height: 300px; }
-.container .flex-container .data-selection {
+.container > .flex-container .data-selection {
   flex-grow: 2; }
-  .container .flex-container .data-selection form label {
+  .container > .flex-container .data-selection form label {
     display: block; }
-  .container .flex-container .data-selection form .roadSectionSelect {
+  .container > .flex-container .data-selection form .roadSectionSelect {
     margin-top: 30px;
     display: none; }
-.container .flex-container #map {
+.container > .flex-container .data-controls {
+  margin-top: 30px; }
+  .container > .flex-container .data-controls .flex-container {
+    justify-content: flex-start; }
+  .container > .flex-container .data-controls .left,
+  .container > .flex-container .data-controls .right {
+    display: flex;
+    flex-direction: column; }
+    .container > .flex-container .data-controls .left input[type=checkbox],
+    .container > .flex-container .data-controls .right input[type=checkbox] {
+      position: absolute;
+      top: -9999px;
+      left: -9999px; }
+    .container > .flex-container .data-controls .left input[type=checkbox]:checked + label,
+    .container > .flex-container .data-controls .right input[type=checkbox]:checked + label {
+      background-color: #e6e6e6;
+      border-color: #adadad; }
+    .container > .flex-container .data-controls .left label,
+    .container > .flex-container .data-controls .right label {
+      margin-bottom: 10px; }
+      .container > .flex-container .data-controls .left label:last-of-type,
+      .container > .flex-container .data-controls .right label:last-of-type {
+        margin-bottom: 0; }
+  .container > .flex-container .data-controls .left {
+    margin-right: 10px; }
+.container > .flex-container #map {
   flex-grow: 3;
   flex-shrink: 0; }
 
