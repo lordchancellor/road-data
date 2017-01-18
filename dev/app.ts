@@ -102,6 +102,43 @@ const graphingAPI = {
 	}
 };
 
+const mappingAPI = {
+	getGeoCoords: function getGeoCoords(easting, northing) {
+		const os = new OSRef(easting, northing);
+		let geoCoords = os.toLatLng(os);
+
+		geoCoords.OSGB36ToWGS84();
+
+		return geoCoords;
+	},
+
+	initMap: function initMap(easting = -1, northing = -1) {
+		console.log('initMap called - ', easting, northing);
+
+		if (easting !== -1 && northing !== -1) {
+			const center = this.getGeoCoords(easting, northing);
+			console.log(center);
+
+			const map = new google.maps.Map(document.getElementById('map'), {
+				center: center,
+				zoom: 15,
+				zoomControl: true,
+				mapTypeControl: false,
+				scaleControl: false,
+				streetViewControl: false,
+				rotateControl: false,
+				fullscreenControl: false
+			});
+
+			const marker = new google.maps.Marker({
+				position: center,
+				map: map
+			});
+		}
+	}
+
+};
+
 const pageSetupAPI = {
 	uniqueRoads: [],
 	allRoads: [],
@@ -194,12 +231,10 @@ const pageSetupAPI = {
 
 		roadSectionSelect.addEventListener('change', function() {
 			if (this.selectedIndex !== 0) {
-				//const northing = roadDataAPI.getNorthing(this.value);
-				//console.log(northing);
 				const easting = parseInt(this.options[this.selectedIndex].getAttribute('data-easting'), 10);
 				const northing = parseInt(this.options[this.selectedIndex].getAttribute('data-northing'), 10);
-				console.log(easting, northing);
 
+				mappingAPI.initMap(easting, northing);
 
 				graphingAPI.barchart(roadDataAPI.getIndividualData("Motorcycles", easting, northing), roadDataAPI.getIndividualData("PedalCycles", easting, northing));
 			}
@@ -252,52 +287,11 @@ promise.then(
 );
 
 
-// Google Map
-function initMap() {
-	const center = {
-		lat: 50.6943231532,
-		lng: -3.50213953897
-	};
-
-	// const center = {
-	// 	lat: 50.69376666612421,
-	// 	lng: -3.500945871444607
-	// };
-
-	const map = new google.maps.Map(document.getElementById('map'), {
-		center: center,
-		zoom: 15,
-		zoomControl: true,
-		mapTypeControl: false,
-		scaleControl: false,
-		streetViewControl: false,
-		rotateControl: false,
-		fullscreenControl: false
-	});
-
-	const marker = new google.maps.Marker({
-		position: center,
-		map: map
-	});
-}
 
 
+/*
 
-// d3.csv('../data/devon.csv', (err, data) => {
-// 	if (err) {
-// 		console.err('There was an error');
-// 	}
-// 	else {
-// 		console.log('Data loaded ok!');
-// 	}
-// 	for (let item of data) {
-// 		roadDataAPI.readRoadData(item);
-// 	}
+initMap called -  303700 112172
+LatLng {lat: 50.800082716510914, lng: -3.187644286894731}
 
-// 	console.log('Finished loading data');
-// 	roadDataAPI.testData = roadDataAPI.getRoadData(89374);
-// 	console.log(roadDataAPI.testData);
-
-// 	graphingAPI.barchart(roadDataAPI.getIndividualData("Motorcycles"));
-// });
-
+*/

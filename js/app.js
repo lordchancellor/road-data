@@ -85,6 +85,37 @@ var graphingAPI = {
         return dataObj;
     }
 };
+var mappingAPI = {
+    getGeoCoords: function getGeoCoords(easting, northing) {
+        var os = new OSRef(easting, northing);
+        var geoCoords = os.toLatLng(os);
+        geoCoords.OSGB36ToWGS84();
+        return geoCoords;
+    },
+    initMap: function initMap(easting, northing) {
+        if (easting === void 0) { easting = -1; }
+        if (northing === void 0) { northing = -1; }
+        console.log('initMap called - ', easting, northing);
+        if (easting !== -1 && northing !== -1) {
+            var center = this.getGeoCoords(easting, northing);
+            console.log(center);
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: center,
+                zoom: 15,
+                zoomControl: true,
+                mapTypeControl: false,
+                scaleControl: false,
+                streetViewControl: false,
+                rotateControl: false,
+                fullscreenControl: false
+            });
+            var marker = new google.maps.Marker({
+                position: center,
+                map: map
+            });
+        }
+    }
+};
 var pageSetupAPI = {
     uniqueRoads: [],
     allRoads: [],
@@ -158,11 +189,9 @@ var pageSetupAPI = {
         });
         roadSectionSelect.addEventListener('change', function () {
             if (this.selectedIndex !== 0) {
-                //const northing = roadDataAPI.getNorthing(this.value);
-                //console.log(northing);
                 var easting = parseInt(this.options[this.selectedIndex].getAttribute('data-easting'), 10);
                 var northing = parseInt(this.options[this.selectedIndex].getAttribute('data-northing'), 10);
-                console.log(easting, northing);
+                mappingAPI.initMap(easting, northing);
                 graphingAPI.barchart(roadDataAPI.getIndividualData("Motorcycles", easting, northing), roadDataAPI.getIndividualData("PedalCycles", easting, northing));
             }
         });
@@ -199,43 +228,9 @@ promise.then(function (result) {
     // graphingAPI.barchart(roadDataAPI.getIndividualData("Motorcycles"), roadDataAPI.getIndividualData("PedalCycles"));
     // graphingAPI.barchart(roadDataAPI.getIndividualData("Motorcycles"));
 }, function (err) { return console.log(err); });
-// Google Map
-function initMap() {
-    var center = {
-        lat: 50.6943231532,
-        lng: -3.50213953897
-    };
-    // const center = {
-    // 	lat: 50.69376666612421,
-    // 	lng: -3.500945871444607
-    // };
-    var map = new google.maps.Map(document.getElementById('map'), {
-        center: center,
-        zoom: 15,
-        zoomControl: true,
-        mapTypeControl: false,
-        scaleControl: false,
-        streetViewControl: false,
-        rotateControl: false,
-        fullscreenControl: false
-    });
-    var marker = new google.maps.Marker({
-        position: center,
-        map: map
-    });
-}
-// d3.csv('../data/devon.csv', (err, data) => {
-// 	if (err) {
-// 		console.err('There was an error');
-// 	}
-// 	else {
-// 		console.log('Data loaded ok!');
-// 	}
-// 	for (let item of data) {
-// 		roadDataAPI.readRoadData(item);
-// 	}
-// 	console.log('Finished loading data');
-// 	roadDataAPI.testData = roadDataAPI.getRoadData(89374);
-// 	console.log(roadDataAPI.testData);
-// 	graphingAPI.barchart(roadDataAPI.getIndividualData("Motorcycles"));
-// });
+/*
+
+initMap called -  303700 112172
+LatLng {lat: 50.800082716510914, lng: -3.187644286894731}
+
+*/ 

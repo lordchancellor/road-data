@@ -11,7 +11,8 @@
       margin-top: 30px;
       display: none; }
   .flex-container #map {
-    flex-grow: 3; }
+    flex-grow: 3;
+    flex-shrink: 0; }
 
 .bar {
   fill: steelblue; }
