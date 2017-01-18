@@ -1,32 +1,67 @@
 .flex-container {
 	display: flex;
 	flex-direction: row;
+}
 
-	&> div {
-		height: 300px;
-	}
+header {
+	background: $headerBG;
+	border-bottom: 1px solid $headerBorder;
+	@include paddingX(30px);
+	margin-bottom: 10px;
 
-	.data-selection {
-		flex-grow: 2;
+	.flex-container {
+		align-items: center;
+		justify-content: space-between;
 
-		form {
-			label {
-				display: block;
-			}
-
-			.roadSectionSelect {
-				margin-top: 30px;
-				display: none;
-			}
+		h1 {
+			color: $headerText;
+			font-size: 1.3rem;
 		}
 	}
 
-	#map {
-		flex-grow: 3;
-		flex-shrink: 0;
+	p {
+		color: $whiteText;
+		font-size: 0.9rem;
+
+		a {
+			color: $whiteText;
+
+			&:hover,
+			&:focus {
+				color: $whiteText;
+			}
+		}
 	}
 }
 
-.graph-container {
+.container {
+	.flex-container {
+		&> div {
+			height: 300px;
+		}
 
+		.data-selection {
+			flex-grow: 2;
+
+			form {
+				label {
+					display: block;
+				}
+
+				.roadSectionSelect {
+					margin-top: 30px;
+					display: none;
+				}
+			}
+		}
+
+		#map {
+			flex-grow: 3;
+			flex-shrink: 0;
+		}
+	}
+
+	.graph-container {
+
+	}
 }

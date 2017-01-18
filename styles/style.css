@@ -1,18 +1,52 @@
+html,
+body {
+  font-size: 16px; }
+
+.btn-github {
+  background: #333333;
+  border-color: #111111;
+  color: #ffffff;
+  transition: all 0.3s ease-in-out; }
+  .btn-github:hover {
+    background: #fff;
+    color: #333333; }
+
 .flex-container {
   display: flex;
   flex-direction: row; }
-  .flex-container > div {
-    height: 300px; }
-  .flex-container .data-selection {
-    flex-grow: 2; }
-    .flex-container .data-selection form label {
-      display: block; }
-    .flex-container .data-selection form .roadSectionSelect {
-      margin-top: 30px;
-      display: none; }
-  .flex-container #map {
-    flex-grow: 3;
-    flex-shrink: 0; }
+
+header {
+  background: #333;
+  border-bottom: 1px solid #111;
+  padding-left: 30px;
+  padding-right: 30px;
+  margin-bottom: 10px; }
+  header .flex-container {
+    align-items: center;
+    justify-content: space-between; }
+    header .flex-container h1 {
+      color: #ffffff;
+      font-size: 1.3rem; }
+  header p {
+    color: #ffffff;
+    font-size: 0.9rem; }
+    header p a {
+      color: #ffffff; }
+      header p a:hover, header p a:focus {
+        color: #ffffff; }
+
+.container .flex-container > div {
+  height: 300px; }
+.container .flex-container .data-selection {
+  flex-grow: 2; }
+  .container .flex-container .data-selection form label {
+    display: block; }
+  .container .flex-container .data-selection form .roadSectionSelect {
+    margin-top: 30px;
+    display: none; }
+.container .flex-container #map {
+  flex-grow: 3;
+  flex-shrink: 0; }
 
 .bar {
   fill: steelblue; }

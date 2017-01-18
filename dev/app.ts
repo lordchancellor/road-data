@@ -279,19 +279,10 @@ promise.then(
 
 		roadDataAPI.testData = roadDataAPI.getRoadData(89374);
 		console.log(roadDataAPI.testData);
-
-		// graphingAPI.barchart(roadDataAPI.getIndividualData("Motorcycles"), roadDataAPI.getIndividualData("PedalCycles"));
-		// graphingAPI.barchart(roadDataAPI.getIndividualData("Motorcycles"));
 	},
 	(err) => console.log(err)
 );
 
-
-
-
-/*
-
-initMap called -  303700 112172
-LatLng {lat: 50.800082716510914, lng: -3.187644286894731}
-
-*/
+(() => {
+	document.getElementsByClassName('currentYear')[0].textContent = new Date().getFullYear();
+})();
