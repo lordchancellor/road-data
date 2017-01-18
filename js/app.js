@@ -12,18 +12,18 @@ var roadDataAPI = {
         pageSetupAPI.setAllRoads(obj);
         this.roadData.push(obj);
     },
-    getRoadData: function getRoadData(northing) {
+    getRoadData: function getRoadData(easting, northing) {
         var individualRoadData = [];
         for (var _i = 0, _a = this.roadData; _i < _a.length; _i++) {
             var item = _a[_i];
-            if (item["Northing"] === northing) {
+            if (item["Easting"] === easting && item["Northing"] === northing) {
                 individualRoadData.push(item);
             }
         }
         return individualRoadData;
     },
-    getIndividualData: function getIndividualData(column, northing) {
-        var data = this.getRoadData(northing);
+    getIndividualData: function getIndividualData(column, easting, northing) {
+        var data = this.getRoadData(easting, northing);
         var dataObj = {
             column: column,
             road: data[0]["Road"],
@@ -38,17 +38,6 @@ var roadDataAPI = {
             dataObj.years = dataObj.years.concat([item["AADFYear"]]);
         }
         return dataObj;
-    },
-    getNorthing: function getNorthing(label) {
-        console.log(label);
-        label = label.split(' to ');
-        for (var _i = 0, _a = pageSetupAPI.allRoads; _i < _a.length; _i++) {
-            var road = _a[_i];
-            if (road["StartJunction"] === label[0] && road["EndJunction"] === label[1]) {
-                return road["Northing"];
-            }
-        }
-        console.log('Could not find Northing');
     }
 };
 var graphingAPI = {
@@ -132,7 +121,7 @@ var pageSetupAPI = {
             var roadSection = _a[_i];
             if (roadSection["Road"] === road) {
                 var label = roadSection["StartJunction"] + " to " + roadSection["EndJunction"];
-                roadSectionSelect.appendChild(this.createOption(label));
+                roadSectionSelect.appendChild(this.createOption(label, roadSection["Easting"], roadSection["Northing"]));
             }
         }
     },
@@ -147,9 +136,15 @@ var pageSetupAPI = {
             select.removeChild(select.lastChild);
         }
     },
-    createOption: function createOption(label) {
+    createOption: function createOption(label, easting, northing) {
+        if (easting === void 0) { easting = -1; }
+        if (northing === void 0) { northing = -1; }
         var option = document.createElement('option');
         option.setAttribute('value', label);
+        if (easting !== -1 && northing !== -1) {
+            option.setAttribute('data-easting', easting);
+            option.setAttribute('data-northing', northing);
+        }
         option.textContent = label;
         return option;
     },
@@ -163,9 +158,12 @@ var pageSetupAPI = {
         });
         roadSectionSelect.addEventListener('change', function () {
             if (this.selectedIndex !== 0) {
-                var northing = roadDataAPI.getNorthing(this.value);
-                console.log(northing);
-                graphingAPI.barchart(roadDataAPI.getIndividualData("Motorcycles", northing), roadDataAPI.getIndividualData("PedalCycles", northing));
+                //const northing = roadDataAPI.getNorthing(this.value);
+                //console.log(northing);
+                var easting = parseInt(this.options[this.selectedIndex].getAttribute('data-easting'), 10);
+                var northing = parseInt(this.options[this.selectedIndex].getAttribute('data-northing'), 10);
+                console.log(easting, northing);
+                graphingAPI.barchart(roadDataAPI.getIndividualData("Motorcycles", easting, northing), roadDataAPI.getIndividualData("PedalCycles", easting, northing));
             }
         });
     },

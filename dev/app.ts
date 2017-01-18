@@ -17,11 +17,11 @@ const roadDataAPI = {
 		this.roadData.push(obj);
 	},
 
-	getRoadData: function getRoadData(northing) {
+	getRoadData: function getRoadData(easting, northing) {
 		let individualRoadData = [];
 
 		for (let item of this.roadData) {
-			if (item["Northing"] === northing) {
+			if (item["Easting"] === easting && item["Northing"] === northing) {
 				individualRoadData.push(item);
 			}
 		}
@@ -29,8 +29,8 @@ const roadDataAPI = {
 		return individualRoadData;
 	},
 
-	getIndividualData: function getIndividualData(column, northing) {
-		const data = this.getRoadData(northing);
+	getIndividualData: function getIndividualData(column, easting, northing) {
+		const data = this.getRoadData(easting, northing);
 		let dataObj = {
 			column,
 			road: data[0]["Road"],
@@ -46,21 +46,7 @@ const roadDataAPI = {
 		}
 
 		return dataObj;
-	},
-
-	getNorthing: function getNorthing(label) {
-		console.log(label);
-		label = label.split(' to ');
-
-		for (let road of pageSetupAPI.allRoads) {
-			if (road["StartJunction"] === label[0] && road["EndJunction"] === label[1]) {
-				return road["Northing"];
-			}
-		}
-
-		console.log('Could not find Northing');
 	}
-
 };
 
 const graphingAPI = {
@@ -160,7 +146,7 @@ const pageSetupAPI = {
 		for (let roadSection of this.allRoads) {
 			if (roadSection["Road"] === road) {
 				let label = `${roadSection["StartJunction"]} to ${roadSection["EndJunction"]}`;
-				roadSectionSelect.appendChild(this.createOption(label));
+				roadSectionSelect.appendChild(this.createOption(label, roadSection["Easting"], roadSection["Northing"]));
 			}
 		}
 	},
@@ -180,10 +166,16 @@ const pageSetupAPI = {
 		}
 	},
 
-	createOption: function createOption(label) {
+	createOption: function createOption(label, easting = -1, northing = -1) {
 		let option = document.createElement('option');
 
 		option.setAttribute('value', label);
+
+		if (easting !== -1 && northing !== -1) {
+			option.setAttribute('data-easting', easting);
+			option.setAttribute('data-northing', northing);
+		}
+
 		option.textContent = label;
 
 		return option;
@@ -202,10 +194,14 @@ const pageSetupAPI = {
 
 		roadSectionSelect.addEventListener('change', function() {
 			if (this.selectedIndex !== 0) {
-				const northing = roadDataAPI.getNorthing(this.value);
-				console.log(northing);
+				//const northing = roadDataAPI.getNorthing(this.value);
+				//console.log(northing);
+				const easting = parseInt(this.options[this.selectedIndex].getAttribute('data-easting'), 10);
+				const northing = parseInt(this.options[this.selectedIndex].getAttribute('data-northing'), 10);
+				console.log(easting, northing);
 
-				graphingAPI.barchart(roadDataAPI.getIndividualData("Motorcycles", northing), roadDataAPI.getIndividualData("PedalCycles", northing));
+
+				graphingAPI.barchart(roadDataAPI.getIndividualData("Motorcycles", easting, northing), roadDataAPI.getIndividualData("PedalCycles", easting, northing));
 			}
 		});
 	},
