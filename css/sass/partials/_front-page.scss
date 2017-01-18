@@ -1,31 +1,111 @@
-.flex-container {
+.flexContainer {
 	display: flex;
 	flex-direction: row;
+}
 
-	&> div {
-		height: 300px;
-	}
+header {
+	background: $headerBG;
+	border-bottom: 1px solid $headerBorder;
+	@include paddingX(30px);
+	margin-bottom: 10px;
 
-	.data-selection {
-		flex-grow: 2;
+	.flexContainer {
+		align-items: center;
+		justify-content: space-between;
 
-		form {
-			label {
-				display: block;
-			}
-
-			.roadSectionSelect {
-				margin-top: 30px;
-				display: none;
-			}
+		h1 {
+			color: $headerText;
+			font-size: 1.3rem;
 		}
 	}
 
-	#map {
-		flex-grow: 3;
+	p {
+		color: $whiteText;
+		font-size: 0.9rem;
+
+		a {
+			color: $whiteText;
+
+			&:hover,
+			&:focus {
+				color: $whiteText;
+			}
+		}
 	}
 }
 
-.graph-container {
+.container {
+	&>.flexContainer {
+		&> div {
+			height: 350px;
+			margin-right: 30px;
+		}
 
+		.dataSelection {
+			flex-grow: 2;
+
+			form {
+				label {
+					display: block;
+				}
+
+				.roadSectionSelect {
+					margin-top: 30px;
+					display: none;
+				}
+			}
+		}
+
+		.dataControls {
+			margin-top: 30px;
+			display: none;
+
+			.flexContainer {
+				justify-content: flex-start;
+			}
+
+			.left,
+			.right {
+				display: flex;
+				flex-direction: column;
+
+				input[type=checkbox] {
+					position: absolute;
+					top: -9999px;
+					left: -9999px;
+				}
+
+				input[type=checkbox]:checked + label {
+					background-color: #e6e6e6;
+					border-color: #adadad;
+				}
+
+				label {
+					margin-bottom: 10px;
+
+					&:last-of-type {
+						margin-bottom: 0;
+					}
+				}
+			}
+
+			.left {
+				margin-right: 10px;
+			}
+
+			.right {
+
+			}
+		}
+
+		#map {
+			flex-grow: 3;
+			flex-shrink: 0;
+		}
+	}
+
+	#graph {
+		width: 400px;
+		height: 200px;
+	}
 }

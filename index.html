@@ -11,9 +11,8 @@
 
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 		<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
-		<link href="css/style.css" rel="stylesheet">
+		<link href="styles/style.css" rel="stylesheet">
 
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 		<script src="https://d3js.org/d3.v4.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
 
@@ -25,11 +24,22 @@
 	</head>
 
 	<body>
-		<div class="container">
-			<h1>Road Data</h1>
+		<header>
+			<div class="flexContainer">
+				<h1>Devon Road Data Project</h1>
+				<a class="btn btn-github" href="https://github.com/lordchancellor/road-data" target="_blank" rel="noopener">
+					<i class="fa fa-lg fa-github"></i> See the code on GitHub
+				</a>
+			</div>
 
-			<div class="flex-container">
-				<div class="data-selection">
+			<p>
+				&copy; <span class="currentYear"></span> <a href="http://misterford.co.uk" target="_blank" rel="_noopener">Christopher Ford</a>
+			</p>
+		</header>
+
+		<div class="container">
+			<div class="flexContainer">
+				<div class="dataSelection well">
 					<form action="">
 						<label for="uniqueRoads">Road Selection</label>
 						<select name="uniqueRoads" id="uniqueRoads">
@@ -40,23 +50,46 @@
 							<label for="roadSection">Road Section</label>
 							<select name="roadSection" id="roadSection"></select>
 						</div>
+
+						<div class="dataControls">
+							<label>Choose data to view</label>
+							<div class="flexContainer">
+								<div class="left">
+									<input type="checkbox" id="AllMotorVehicles">
+									<label for="AllMotorVehicles" class="btn btn-default">All Motor Vehicles</label>
+
+									<input type="checkbox" id="BusCoaches">
+									<label for="BusCoaches" class="btn btn-default">Buses and Coaches</label>
+
+									<input type="checkbox" id="CarsTaxis">
+									<label for="CarsTaxis" class="btn btn-default">Cars and Taxis</label>
+								</div>
+								<div class="right">
+									<input type="checkbox" id="LightGoodsVehicles">
+									<label for="LightGoodsVehicles" class="btn btn-default">LGVs</label>
+
+									<input type="checkbox" id="Motorcycles">
+									<label for="Motorcycles" class="btn btn-default">Motorcycles</label>
+
+									<input type="checkbox" id="PedalCycles">
+									<label for="PedalCycles" class="btn btn-default">Pedal Cycles</label>
+								</div>
+							</div>
+						</div>
 					</form>
 				</div>
 				<div id="map"></div>
 			</div>
 
-			<!--<div id="graph-container"></div>-->
-			<canvas id="graph-container" width="400" height="200"></canvas>
+			<div id="canvasContainer">
+				<canvas id="graph"></canvas>
+			</div>
 		</div>
-
-
-
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 		<!-- JSCoord by Jonathan Stott - http://www.jstott.me.uk/jscoord/ -->
 		<script src="js/jscoord-1.1.1.js"></script>
 		<script src="js/app.js"></script>
 
-		<script src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap" async defer></script>
+		<script src="https://maps.googleapis.com/maps/api/js?key=&callback=mappingAPI.initMap" async defer></script>
 	</body>
 </html>
