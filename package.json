@@ -4,11 +4,25 @@
   "description": "",
   "main": "js/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm run build",
+    "build": "concurrently \"npm run tsc:w\" \"npm run sass:w\" \"npm run server\"",
+    "lint": "tslint dev/**.ts",
+    "tsc": "tsc dev/**.ts  --outDir js",
+    "tsc:w": "tsc -w dev/**.ts  --outDir js",
+    "sass": "sass styles/sass/style.scss:styles/style.css",
+    "sass:w": "sass styles/sass/style.scss:styles/style.css -w",
+    "server": "lite-server --port=3000"
   },
   "author": "Christopher Ford",
   "license": "ISC",
   "dependencies": {
     "d3": "^4.4.1"
-  }
+  },
+  "devDependencies": {
+    "concurrently": "^3.1.0",
+    "lite-server": "^2.2.2",
+    "tslint": "^4.3.1",
+    "typescript": "^2.1.5",
+    "watch": "^1.0.1"
+  }  
 }

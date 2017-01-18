@@ -1,2 +1,4 @@
 node_modules/
 css/sass/.sass-cache/
+.sass-cache/
+npm-debug.log
