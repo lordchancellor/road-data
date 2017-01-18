@@ -38,42 +38,51 @@ var roadDataAPI = {
             dataObj.years = dataObj.years.concat([item["AADFYear"]]);
         }
         return dataObj;
+    },
+    // Get an array of IDs from all checked checkboxes
+    getDataToDisplay: function getDataToDisplay() {
+        var checkboxes = document.querySelectorAll('input');
+        var checked = [];
+        for (var _i = 0, checkboxes_1 = checkboxes; _i < checkboxes_1.length; _i++) {
+            var checkbox = checkboxes_1[_i];
+            if (checkbox.checked) {
+                checked = checked.concat([checkbox.id]);
+            }
+        }
+        return checked;
+    },
+    // Reset all checkboxes to unchecked
+    resetCheckboxes: function resetCheckboxes() {
+        var checkboxes = document.querySelectorAll('input');
+        for (var _i = 0, checkboxes_2 = checkboxes; _i < checkboxes_2.length; _i++) {
+            var checkbox = checkboxes_2[_i];
+            checkbox.checked = false;
+        }
+    },
+    getDataObjects: function getDataObjects(easting, northing) {
+        var dataPoints = [];
+        var dataToDisplay = this.getDataToDisplay();
+        for (var _i = 0, dataToDisplay_1 = dataToDisplay; _i < dataToDisplay_1.length; _i++) {
+            var data = dataToDisplay_1[_i];
+            dataPoints = dataPoints.concat([roadDataAPI.getIndividualData(data, easting, northing)]);
+        }
+        console.log(dataPoints);
+        return dataPoints;
     }
 };
 var graphingAPI = {
-    barchart: function barchart(dataObj) {
-        var data = {};
-        if (arguments.length > 1) {
-            data = this.groupedBar(arguments);
-        }
-        else {
-            data = {
-                labels: dataObj.years,
-                datasets: [{
-                        label: dataObj.column,
-                        data: dataObj.columnData,
-                        backgroundColor: '#E53935',
-                        borderColor: [],
-                        borderWidth: 1
-                    }]
-            };
-        }
-        var ctx = document.getElementById('graph-container');
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: data
-        });
-    },
-    groupedBar: function groupedBar(group) {
+    barChart: function barChart(dataObj) {
+        // Destroy the existing canvas and create a new one to prevent bleed
+        this.replaceCanvas();
         var colors = ['#E53935', '#5E35B1', '#1E88E5', '#00897B', '#43A047', '#FFB300'];
-        var i = 0;
-        var dataObj = {
-            labels: group[0].years,
+        var data = {
+            labels: dataObj[0].years,
             datasets: []
         };
-        for (var _i = 0, group_1 = group; _i < group_1.length; _i++) {
-            var item = group_1[_i];
-            dataObj.datasets = dataObj.datasets.concat([{
+        var i = 0;
+        for (var _i = 0, dataObj_1 = dataObj; _i < dataObj_1.length; _i++) {
+            var item = dataObj_1[_i];
+            data.datasets = data.datasets.concat([{
                     label: item.column,
                     data: item.columnData,
                     backgroundColor: colors[i],
@@ -82,7 +91,21 @@ var graphingAPI = {
                 }]);
             i++;
         }
-        return dataObj;
+        var ctx = document.getElementById('graph');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: data
+        });
+    },
+    replaceCanvas: function replaceCanvas() {
+        var container = document.getElementById('canvasContainer');
+        var canvas = document.createElement('canvas');
+        // Remove the child nodes from the canvasContainer (should only be one, but loop to be sure)
+        while (container.hasChildNodes()) {
+            container.removeChild(container.lastChild);
+        }
+        canvas.setAttribute('id', 'graph');
+        container.appendChild(canvas);
     }
 };
 var mappingAPI = {
@@ -183,18 +206,44 @@ var pageSetupAPI = {
         var uniqueRoadSelect = document.getElementById('uniqueRoads');
         var roadSectionSelect = document.getElementById('roadSection');
         var roadSectionContainer = document.getElementsByClassName('roadSectionSelect')[0];
+        var dataControls = document.getElementsByClassName('dataControls')[0];
+        var checkboxes = document.querySelectorAll('input');
+        // Add and event listener to the unique roads dropdown so that it populates the sections on change
         uniqueRoadSelect.addEventListener('change', function () {
+            if (this.selectedIndex !== 0) {
+                roadSectionContainer.style.display = 'block';
+            }
+            else {
+                // Reset the states of everything
+                roadSectionContainer.style.display = 'none';
+                roadSectionContainer.selectedIndex = 0;
+                dataControls.style.display = 'none';
+            }
             roadSectionContainer.style.display = this.selectedIndex === 0 ? 'none' : 'block';
             pageSetupAPI.populateRoadSectionSelect(this.value);
         });
+        // Add an event listener to the sections so that a map and the graphs can be generated when a section is chosen
         roadSectionSelect.addEventListener('change', function () {
             if (this.selectedIndex !== 0) {
                 var easting = parseInt(this.options[this.selectedIndex].getAttribute('data-easting'), 10);
                 var northing = parseInt(this.options[this.selectedIndex].getAttribute('data-northing'), 10);
+                // Cause the data toggles to be visible
+                dataControls.style.display = 'block';
+                console.log(easting, northing);
                 mappingAPI.initMap(easting, northing);
-                graphingAPI.barchart(roadDataAPI.getIndividualData("Motorcycles", easting, northing), roadDataAPI.getIndividualData("PedalCycles", easting, northing));
+                graphingAPI.barChart(roadDataAPI.getDataObjects(easting, northing));
+            }
+            else {
+                dataControls.style.display = 'none';
             }
         });
+        // Add event listeners to the checkboxes to trigger a change in the data when toggled
+        for (var _i = 0, checkboxes_3 = checkboxes; _i < checkboxes_3.length; _i++) {
+            var checkbox = checkboxes_3[_i];
+            checkbox.addEventListener('click', function () {
+                graphingAPI.barChart(roadDataAPI.getDataObjects(parseInt(roadSectionSelect.options[roadSectionSelect.selectedIndex].getAttribute('data-easting'), 10), parseInt(roadSectionSelect.options[roadSectionSelect.selectedIndex].getAttribute('data-northing'), 10)));
+            });
+        }
     },
     setupPage: function setupPage() {
         console.log('Setting select');
@@ -226,6 +275,7 @@ promise.then(function (result) {
     roadDataAPI.testData = roadDataAPI.getRoadData(89374);
     console.log(roadDataAPI.testData);
 }, function (err) { return console.log(err); });
+// Set the current year in the header copyright
 (function () {
     document.getElementsByClassName('currentYear')[0].textContent = new Date().getFullYear();
 })();

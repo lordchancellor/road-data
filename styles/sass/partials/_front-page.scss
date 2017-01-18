@@ -1,4 +1,4 @@
-.flex-container {
+.flexContainer {
 	display: flex;
 	flex-direction: row;
 }
@@ -9,7 +9,7 @@ header {
 	@include paddingX(30px);
 	margin-bottom: 10px;
 
-	.flex-container {
+	.flexContainer {
 		align-items: center;
 		justify-content: space-between;
 
@@ -35,12 +35,13 @@ header {
 }
 
 .container {
-	&>.flex-container {
+	&>.flexContainer {
 		&> div {
-			height: 300px;
+			height: 350px;
+			margin-right: 30px;
 		}
 
-		.data-selection {
+		.dataSelection {
 			flex-grow: 2;
 
 			form {
@@ -55,10 +56,11 @@ header {
 			}
 		}
 
-		.data-controls {
+		.dataControls {
 			margin-top: 30px;
+			display: none;
 
-			.flex-container {
+			.flexContainer {
 				justify-content: flex-start;
 			}
 
@@ -102,7 +104,8 @@ header {
 		}
 	}
 
-	.graph-container {
-
+	#graph {
+		width: 400px;
+		height: 200px;
 	}
 }

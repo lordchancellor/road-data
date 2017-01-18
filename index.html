@@ -25,7 +25,7 @@
 
 	<body>
 		<header>
-			<div class="flex-container">
+			<div class="flexContainer">
 				<h1>Devon Road Data Project</h1>
 				<a class="btn btn-github" href="https://github.com/lordchancellor/road-data" target="_blank" rel="noopener">
 					<i class="fa fa-lg fa-github"></i> See the code on GitHub
@@ -38,8 +38,8 @@
 		</header>
 
 		<div class="container">
-			<div class="flex-container">
-				<div class="data-selection well">
+			<div class="flexContainer">
+				<div class="dataSelection well">
 					<form action="">
 						<label for="uniqueRoads">Road Selection</label>
 						<select name="uniqueRoads" id="uniqueRoads">
@@ -51,9 +51,9 @@
 							<select name="roadSection" id="roadSection"></select>
 						</div>
 
-						<div class="data-controls">
+						<div class="dataControls">
 							<label>Choose data to view</label>
-							<div class="flex-container">
+							<div class="flexContainer">
 								<div class="left">
 									<input type="checkbox" id="AllMotorVehicles">
 									<label for="AllMotorVehicles" class="btn btn-default">All Motor Vehicles</label>
@@ -81,8 +81,9 @@
 				<div id="map"></div>
 			</div>
 
-			<!--<div id="graph-container"></div>-->
-			<canvas id="graph-container" width="400" height="200"></canvas>
+			<div id="canvasContainer">
+				<canvas id="graph"></canvas>
+			</div>
 		</div>
 
 		<!-- JSCoord by Jonathan Stott - http://www.jstott.me.uk/jscoord/ -->

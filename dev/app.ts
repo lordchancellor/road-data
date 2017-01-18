@@ -46,48 +46,59 @@ const roadDataAPI = {
 		}
 
 		return dataObj;
+	},
+
+	// Get an array of IDs from all checked checkboxes
+	getDataToDisplay: function getDataToDisplay() {
+		const checkboxes = document.querySelectorAll('input');
+		let checked = [];
+
+		for (let checkbox of checkboxes) {
+			if (checkbox.checked) {
+				checked = [...checked, checkbox.id];
+			}
+		}
+
+		return checked;
+	},
+
+	// Reset all checkboxes to unchecked
+	resetCheckboxes: function resetCheckboxes() {
+		const checkboxes = document.querySelectorAll('input');
+
+		for (let checkbox of checkboxes) {
+			checkbox.checked = false;
+		}
+	},
+
+	getDataObjects: function getDataObjects(easting, northing) {
+		let dataPoints = [];
+		const dataToDisplay = this.getDataToDisplay();
+
+		for (let data of dataToDisplay) {
+			dataPoints = [...dataPoints, roadDataAPI.getIndividualData(data, easting, northing)];
+		}
+
+		console.log(dataPoints);
+
+		return dataPoints;
 	}
 };
 
 const graphingAPI = {
-	barchart: function barchart(dataObj) {
-		let data = {};
-
-		if (arguments.length > 1) {
-			data = this.groupedBar(arguments);
-		}
-		else {
-			data = {
-				labels: dataObj.years,
-				datasets: [{
-					label: dataObj.column,
-					data: dataObj.columnData,
-					backgroundColor: '#E53935',
-					borderColor: [],
-					borderWidth: 1
-				}]
-			};
-		}
-
-		const ctx = document.getElementById('graph-container');
-
-		const myChart = new Chart(ctx, {
-			type: 'bar',
-			data: data
-		});
-	},
-
-	groupedBar: function groupedBar(group) {
+	barChart: function barChart(dataObj) {
+		// Destroy the existing canvas and create a new one to prevent bleed
+		this.replaceCanvas();
+		
 		const colors = ['#E53935', '#5E35B1', '#1E88E5', '#00897B', '#43A047', '#FFB300'];
-		let i = 0;
-
-		let dataObj = {
-			labels: group[0].years,
+		let data = {
+			labels: dataObj[0].years,
 			datasets: []
 		};
+		let i = 0;
 
-		for (let item of group) {
-			dataObj.datasets = [...dataObj.datasets, {
+		for (let item of dataObj) {
+			data.datasets = [...data.datasets, {
 				label: item.column,
 				data: item.columnData,
 				backgroundColor: colors[i],
@@ -98,7 +109,26 @@ const graphingAPI = {
 			i++;
 		}
 
-		return dataObj;
+		const ctx = document.getElementById('graph');
+
+		const myChart = new Chart(ctx, {
+			type: 'bar',
+			data: data
+		});
+	},
+
+	replaceCanvas: function replaceCanvas() {
+		const container = document.getElementById('canvasContainer');
+		let canvas = document.createElement('canvas');
+
+		// Remove the child nodes from the canvasContainer (should only be one, but loop to be sure)
+		while (container.hasChildNodes()) {
+			container.removeChild(container.lastChild);
+		}
+
+		canvas.setAttribute('id', 'graph');
+
+		container.appendChild(canvas);
 	}
 };
 
@@ -222,23 +252,56 @@ const pageSetupAPI = {
 		const uniqueRoadSelect = document.getElementById('uniqueRoads');
 		const roadSectionSelect = document.getElementById('roadSection');
 		const roadSectionContainer = document.getElementsByClassName('roadSectionSelect')[0];
+		const dataControls = document.getElementsByClassName('dataControls')[0];
+		const checkboxes = document.querySelectorAll('input');
 
+		// Add and event listener to the unique roads dropdown so that it populates the sections on change
 		uniqueRoadSelect.addEventListener('change', function() {
+			if (this.selectedIndex !== 0) {
+				roadSectionContainer.style.display = 'block';
+			}
+			else {
+				// Reset the states of everything
+				roadSectionContainer.style.display = 'none';
+				roadSectionContainer.selectedIndex = 0;				
+				dataControls.style.display = 'none';
+			}
 			roadSectionContainer.style.display = this.selectedIndex === 0 ? 'none' : 'block';
+			
 
 			pageSetupAPI.populateRoadSectionSelect(this.value);
 		});
 
+		// Add an event listener to the sections so that a map and the graphs can be generated when a section is chosen
 		roadSectionSelect.addEventListener('change', function() {
 			if (this.selectedIndex !== 0) {
 				const easting = parseInt(this.options[this.selectedIndex].getAttribute('data-easting'), 10);
 				const northing = parseInt(this.options[this.selectedIndex].getAttribute('data-northing'), 10);
 
+				// Cause the data toggles to be visible
+				dataControls.style.display = 'block';
+
+				console.log(easting, northing);
+
 				mappingAPI.initMap(easting, northing);
 
-				graphingAPI.barchart(roadDataAPI.getIndividualData("Motorcycles", easting, northing), roadDataAPI.getIndividualData("PedalCycles", easting, northing));
+				graphingAPI.barChart(roadDataAPI.getDataObjects(easting, northing));
+			}
+			else {
+				dataControls.style.display = 'none';
 			}
 		});
+
+		// Add event listeners to the checkboxes to trigger a change in the data when toggled
+		for (let checkbox of checkboxes) {
+			checkbox.addEventListener('click', () => {
+				graphingAPI.barChart(roadDataAPI.getDataObjects(
+					parseInt(roadSectionSelect.options[roadSectionSelect.selectedIndex].getAttribute('data-easting'), 10),
+					parseInt(roadSectionSelect.options[roadSectionSelect.selectedIndex].getAttribute('data-northing'), 10)
+				));
+			});
+		}
+
 	},
 
 	setupPage: function setupPage() {
@@ -283,6 +346,7 @@ promise.then(
 	(err) => console.log(err)
 );
 
+// Set the current year in the header copyright
 (() => {
 	document.getElementsByClassName('currentYear')[0].textContent = new Date().getFullYear();
 })();

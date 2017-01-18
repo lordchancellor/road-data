@@ -4,14 +4,14 @@ body {
 
 .btn-github {
   background: #333333;
-  border-color: #111111;
+  border-color: #fff;
   color: #ffffff;
   transition: all 0.3s ease-in-out; }
   .btn-github:hover {
     background: #fff;
     color: #333333; }
 
-.flex-container {
+.flexContainer {
   display: flex;
   flex-direction: row; }
 
@@ -21,10 +21,10 @@ header {
   padding-left: 30px;
   padding-right: 30px;
   margin-bottom: 10px; }
-  header .flex-container {
+  header .flexContainer {
     align-items: center;
     justify-content: space-between; }
-    header .flex-container h1 {
+    header .flexContainer h1 {
       color: #ffffff;
       font-size: 1.3rem; }
   header p {
@@ -35,45 +35,47 @@ header {
       header p a:hover, header p a:focus {
         color: #ffffff; }
 
-.container > .flex-container > div {
-  height: 300px; }
-.container > .flex-container .data-selection {
+.container > .flexContainer > div {
+  height: 350px;
+  margin-right: 30px; }
+.container > .flexContainer .dataSelection {
   flex-grow: 2; }
-  .container > .flex-container .data-selection form label {
+  .container > .flexContainer .dataSelection form label {
     display: block; }
-  .container > .flex-container .data-selection form .roadSectionSelect {
+  .container > .flexContainer .dataSelection form .roadSectionSelect {
     margin-top: 30px;
     display: none; }
-.container > .flex-container .data-controls {
-  margin-top: 30px; }
-  .container > .flex-container .data-controls .flex-container {
+.container > .flexContainer .dataControls {
+  margin-top: 30px;
+  display: none; }
+  .container > .flexContainer .dataControls .flexContainer {
     justify-content: flex-start; }
-  .container > .flex-container .data-controls .left,
-  .container > .flex-container .data-controls .right {
+  .container > .flexContainer .dataControls .left,
+  .container > .flexContainer .dataControls .right {
     display: flex;
     flex-direction: column; }
-    .container > .flex-container .data-controls .left input[type=checkbox],
-    .container > .flex-container .data-controls .right input[type=checkbox] {
+    .container > .flexContainer .dataControls .left input[type=checkbox],
+    .container > .flexContainer .dataControls .right input[type=checkbox] {
       position: absolute;
       top: -9999px;
       left: -9999px; }
-    .container > .flex-container .data-controls .left input[type=checkbox]:checked + label,
-    .container > .flex-container .data-controls .right input[type=checkbox]:checked + label {
+    .container > .flexContainer .dataControls .left input[type=checkbox]:checked + label,
+    .container > .flexContainer .dataControls .right input[type=checkbox]:checked + label {
       background-color: #e6e6e6;
       border-color: #adadad; }
-    .container > .flex-container .data-controls .left label,
-    .container > .flex-container .data-controls .right label {
+    .container > .flexContainer .dataControls .left label,
+    .container > .flexContainer .dataControls .right label {
       margin-bottom: 10px; }
-      .container > .flex-container .data-controls .left label:last-of-type,
-      .container > .flex-container .data-controls .right label:last-of-type {
+      .container > .flexContainer .dataControls .left label:last-of-type,
+      .container > .flexContainer .dataControls .right label:last-of-type {
         margin-bottom: 0; }
-  .container > .flex-container .data-controls .left {
+  .container > .flexContainer .dataControls .left {
     margin-right: 10px; }
-.container > .flex-container #map {
+.container > .flexContainer #map {
   flex-grow: 3;
   flex-shrink: 0; }
-
-.bar {
-  fill: steelblue; }
+.container #graph {
+  width: 400px;
+  height: 200px; }
 
 /*# sourceMappingURL=style.css.map */
